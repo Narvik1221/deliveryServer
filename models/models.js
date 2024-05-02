@@ -18,12 +18,18 @@ const Order = sequelize.define("order", {
   city1: { type: DataTypes.STRING, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: false },
   code: { type: DataTypes.INTEGER, unique: true, allowNull: false },
+  date: { type: DataTypes.STRING, allowNull: false },
+});
+const Cities = sequelize.define("cities", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  name: { type: DataTypes.STRING, allowNull: false,},
 });
 
 User.hasMany(Order, { as: "order" });
-Order.belongsTso(User);
+Order.belongsTo(User);
 
 module.exports = {
   User,
   Order,
+  Cities
 };

@@ -1,7 +1,7 @@
 const ApiError = require("../error/ApiError");
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
-const { Card, OrderCard, Order } = require("../models/models");
+const { Card, OrderCard, Order, Cities } = require("../models/models");
 class OrderController {
   async createOrder(req, res, next) {
     try {
@@ -26,11 +26,12 @@ class OrderController {
 
   async changeOrder(req, res, next) {
     try {
-      let { id, status, active } = req.body;
+      let { id, status, active, date } = req.body;
       const order = await Order.findOne({ where: { id } });
       order.update({
         status,
         active,
+        date,
       });
       return res.json(order);
     } catch (e) {
@@ -66,6 +67,16 @@ class OrderController {
       }
 
       return res.json(orders);
+    } catch (e) {
+      next(ApiError.badRequest(e.message));
+    }
+  }
+
+  async getCities(req, res, next) {
+    try {
+      let cities = await Cities.findAll({});
+
+      return res.json(cities);
     } catch (e) {
       next(ApiError.badRequest(e.message));
     }

@@ -1,0 +1,11 @@
+const Router = require('express')
+const router = new Router()
+const orderController = require('../controllers/orderController')
+const checkRole = require('../middleware/checkRoleMiddleware')
+const authMiddleware = require('../middleware/authMiddleware')
+// router.post('/', checkRole('ADMIN'),deviceController.create)
+router.get('/cities',orderController.getCities)
+// router.get('/:id', deviceController.getOne)
+// router.post('/basket',authMiddleware, deviceController.setBasket)
+// router.get('/basket/:id', authMiddleware, deviceController.getBasket)
+module.exports = router
