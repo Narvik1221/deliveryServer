@@ -44,7 +44,7 @@ class OrderController {
         city2,
         price,
         date1,
-        date2,
+        date2,email
       } = req.body;
       const code = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
       const order = await Order.create({
@@ -58,7 +58,7 @@ class OrderController {
         price,
         code,
         date1,
-        date2,
+        date2,email
       });
       return res.json(order);
     } catch (e) {

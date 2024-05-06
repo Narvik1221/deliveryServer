@@ -21,6 +21,7 @@ const Order = sequelize.define("order", {
   date1: { type: DataTypes.STRING, allowNull: false },
   date2: { type: DataTypes.STRING, allowNull: false },
   feedback: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+  email: { type: DataTypes.STRING },
 });
 
 const Feedback = sequelize.define("feedback", {
