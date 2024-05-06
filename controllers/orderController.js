@@ -1,12 +1,52 @@
 const ApiError = require("../error/ApiError");
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
-const { Card, OrderCard, Order, Cities } = require("../models/models");
+const {
+  Order,
+  Cities,
+  Feedback,
+} = require("../models/models");
 class OrderController {
+  async createFeedback(req, res, next) {
+    try {
+      let { orderId, email, raiting, name } = req.body;
+      const feed = await Feedback.create({
+        orderId,
+        email,
+        raiting,
+        name,
+      });
+      return res.json(feed);
+    } catch (e) {
+      next(ApiError.badRequest(e.message));
+    }
+  }
+
+  async getFeedbacks(req, res, next) {
+    try {
+      let feeds = await Feedback.findAll({});
+
+      return res.json(feeds);
+    } catch (e) {
+      next(ApiError.badRequest(e.message));
+    }
+  }
+
   async createOrder(req, res, next) {
     try {
-      let { userId, status, active, weight, size, city1, city2, price, code } =
-        req.body;
+      let {
+        userId,
+        status,
+        active,
+        weight,
+        size,
+        city1,
+        city2,
+        price,
+        date1,
+        date2,
+      } = req.body;
+      const code = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
       const order = await Order.create({
         userId,
         status,
@@ -17,6 +57,8 @@ class OrderController {
         city2,
         price,
         code,
+        date1,
+        date2,
       });
       return res.json(order);
     } catch (e) {
@@ -26,12 +68,12 @@ class OrderController {
 
   async changeOrder(req, res, next) {
     try {
-      let { id, status, active, date } = req.body;
+      let { id, status, active,feedback } = req.body;
       const order = await Order.findOne({ where: { id } });
       order.update({
         status,
         active,
-        date,
+        feedback
       });
       return res.json(order);
     } catch (e) {
@@ -82,7 +124,7 @@ class OrderController {
     }
   }
 
-  async allOrders(req, res, next) {
+  async getAllOrders(req, res, next) {
     try {
       let { active } = req.params;
       if (active == "true" || active == "false") {
@@ -92,8 +134,21 @@ class OrderController {
         });
         return res.json(orders);
       }
-      let orders = await Order.findAll({ order: [["updatedAt", "DESC"]] });
+      let orders = await Order.findAll(); //{ order: [["updatedAt", "DESC"]] }
       return res.json(orders);
+    } catch (e) {
+      next(ApiError.badRequest(e.message));
+    }
+  }
+  async deleteOrder(req, res, next) {
+    try {
+      const { id } = req.params;
+      const card = await Order.destroy({
+        where: {
+          id,
+        },
+      });
+      return res.json(card);
     } catch (e) {
       next(ApiError.badRequest(e.message));
     }

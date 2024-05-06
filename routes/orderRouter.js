@@ -1,11 +1,13 @@
-const Router = require('express')
-const router = new Router()
-const orderController = require('../controllers/orderController')
-const checkRole = require('../middleware/checkRoleMiddleware')
-const authMiddleware = require('../middleware/authMiddleware')
-// router.post('/', checkRole('ADMIN'),deviceController.create)
-router.get('/cities',orderController.getCities)
-// router.get('/:id', deviceController.getOne)
-// router.post('/basket',authMiddleware, deviceController.setBasket)
-// router.get('/basket/:id', authMiddleware, deviceController.getBasket)
-module.exports = router
+const Router = require("express");
+const router = new Router();
+const orderController = require("../controllers/orderController");
+router.post("/create", orderController.createOrder);
+router.post("/feedback", orderController.createFeedback);
+router.get("/feedback", orderController.getFeedbacks);
+router.get("/cities", orderController.getCities);
+router.get("/:userId/:active", orderController.getOrders);
+router.get("/:active", orderController.getAllOrders);
+router.put("/", orderController.changeOrder);
+router.delete("/:id", orderController.deleteOrder);
+
+module.exports = router;
