@@ -1,11 +1,7 @@
 const ApiError = require("../error/ApiError");
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
-const {
-  Order,
-  Cities,
-  Feedback,
-} = require("../models/models");
+const { Order, Cities, Feedback } = require("../models/models");
 class OrderController {
   async createFeedback(req, res, next) {
     try {
@@ -44,7 +40,8 @@ class OrderController {
         city2,
         price,
         date1,
-        date2,email
+        date2,
+        email,
       } = req.body;
       const code = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
       const order = await Order.create({
@@ -58,7 +55,8 @@ class OrderController {
         price,
         code,
         date1,
-        date2,email
+        date2,
+        email,
       });
       return res.json(order);
     } catch (e) {
@@ -68,12 +66,12 @@ class OrderController {
 
   async changeOrder(req, res, next) {
     try {
-      let { id, status, active,feedback } = req.body;
+      let { id, status, active, feedback } = req.body;
       const order = await Order.findOne({ where: { id } });
       order.update({
         status,
         active,
-        feedback
+        feedback,
       });
       return res.json(order);
     } catch (e) {

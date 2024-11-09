@@ -7,7 +7,7 @@ const fileUpload = require("express-fileupload");
 const router = require("./routes/index");
 const errorHandler = require("./middleware/ErrorHandlingMiddleware");
 const path = require("path");
-const { User } = require("./models/models");
+const { User, Cities } = require("./models/models");
 const PORT = process.env.PORT || 5000;
 const bcrypt = require("bcryptjs");
 const app = express();
@@ -19,25 +19,24 @@ app.use("/api", router);
 
 // Обработка ошибок, последний Middleware
 app.use(errorHandler);
-
 const start = async () => {
   try {
-   
     await sequelize.authenticate();
     await sequelize.sync();
+
     let admin = await User.findOne({
-        where: {
-          role: "ADMIN",
-        },
+      where: {
+        role: "ADMIN",
+      },
+    });
+    if (!!admin == false) {
+      const hashPassword = await bcrypt.hash("ADMIN", 5);
+      let admin = await User.create({
+        email: "ADMIN",
+        password: hashPassword,
+        role: "ADMIN",
       });
-      if (!!admin == false) {
-        const hashPassword = await bcrypt.hash("ADMIN", 5);
-        let admin = await User.create({
-          email: "ADMIN",
-          password: hashPassword,
-          role: "ADMIN",
-        });
-      }
+    }
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
   } catch (e) {
     console.log(e);
